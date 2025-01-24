@@ -230,7 +230,8 @@ import React, { useState, useRef } from "react";
 import Webcam from "react-webcam";
 import "./App.css";
 import CategoryCard from "./CategoryCard";
-import WelcomePage from "./WelcomePage";
+import { generateContent, getRecommendation } from "./GetRecommendations.crud";
+
 
 const Dashboard: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
@@ -321,11 +322,40 @@ const Dashboard: React.FC = () => {
   };
 
   // Function to get recommendations
-  const handleGetRecommendations = () => {
+//   const handleGetRecommendations = () => {
+//     if (image) {
+//         setShowRecommendations(true);
+//       console.log("Get recommendations for the image:", image);
+//       alert("Recommendations generated successfully!");
+//     }
+//   };
+const handleGetRecommendations = async () => {
     if (image) {
-        setShowRecommendations(true);
-      console.log("Get recommendations for the image:", image);
-      alert("Recommendations generated successfully!");
+      try {
+        const base64Data = image.split(",")[1]; 
+
+        // const response = await getRecommendation({ base64: base64Data });
+        const response = await generateContent("Happy");
+        console.log("API Response:", response.data);
+        const jsonMatch = response.data.candidates[0].contents.parts[0].text.match(/```json([\s\S]*?)```/);
+
+            if (jsonMatch) {
+            const jsonString = jsonMatch[1].trim(); // Extract and trim the JSON part
+            try {
+                const parsedJson = JSON.parse(jsonString); // Parse JSON string into an object
+                console.log("Extracted JSON:", parsedJson);
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+            }
+            } else {
+            console.log("No JSON found in the input text.");
+            }
+        // setRecommendations(response.data); 
+        // setShowRecommendations(true); 
+      } catch (error) {
+        console.error("Error fetching recommendations:", error);
+        alert("Failed to fetch recommendations. Please try again.");
+      }
     }
   };
 
