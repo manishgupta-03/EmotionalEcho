@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const getRecommendation = (
-    eventId: string,
     recommendationId: string,
     payload: any
   ) => {

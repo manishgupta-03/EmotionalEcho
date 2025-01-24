@@ -114,6 +114,9 @@ background: linear-gradient(90deg, rgba(193,188,248,1) 47%, rgba(232,249,255,1) 
 .recommendations-txt{
   font-size: 25px;
   font-weight: 600;
+  background: linear-gradient(90deg, #c22847, #3a46c8, #56c672);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 /*  */

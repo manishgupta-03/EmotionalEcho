@@ -231,42 +231,72 @@ import Webcam from "react-webcam";
 import "./App.css";
 import CategoryCard from "./CategoryCard";
 import WelcomePage from "./WelcomePage";
-import { Route, Routes } from "react-router-dom";
-import Dashboard from "./Dashboard";
 
-const App: React.FC = () => {
+const Dashboard: React.FC = () => {
   const [image, setImage] = useState<string | null>(null);
   const [showWebcam, setShowWebcam] = useState(false);
   const webcamRef = useRef<Webcam>(null);
-  const categories = [
-    {
-      category: "Music",
-      items: ["Happyv - Pharrell Williams", "Katrina and the Waves"],
-    },
-    {
-      category: "Movies",
-      items: [ "The Dark Knight", "Interstellar"],
-    },
-    {
-      category: "Novels",
-      items: ["To Kill a Mockingbird", "1984", "Pride and Prejudice"],
-    },
-    {
-      category: "Quotes",
-      items: [
-        "The only limit to our realization of tomorrow is our doubts of today.",
-        "Life is what happens when you're busy making other plans.",
-      ],
-    },
-    {
-      category: "Jokes",
-      items: ["Why don't scientists trust atoms? Because they make up everything!"],
-    },
-    {
-      category: "Books",
-      items: ["Sapiens - Yuval Noah Harari", "Atomic Habits - James Clear"],
-    },
-  ];
+  const [showRecommendations, setShowRecommendations] = useState(false); // New state to toggle recommendations
+  const response = {
+    quotes: [
+      "Happiness is not a destination, it's a way of traveling.",
+      "The best way to cheer yourself is to try to cheer somebody else up.",
+      "Spread love everywhere you go. Let no one ever come to you without leaving happier.",
+      "Happiness is a warm puppy.",
+      "The only thing that will make you happy is being happy with who you are.",
+    ],
+    movies: [
+      { title: "Singin' in the Rain", genre: "Musical, Romance, Comedy" },
+      { title: "Chef", genre: "Comedy, Drama" },
+      { title: "Paddington 2", genre: "Family, Comedy, Adventure" },
+      { title: "The Princess Bride", genre: "Adventure, Family, Fantasy" },
+      { title: "Little Miss Sunshine", genre: "Comedy, Drama, Road Trip" },
+    ],
+    music: [
+      { artist: "Lizzo", song: "Good as Hell", genre: "Pop" },
+      { artist: "Pharrell Williams", song: "Happy", genre: "Pop" },
+      { artist: "Earth, Wind & Fire", song: "September", genre: "Funk, Soul" },
+      { artist: "The Beach Boys", song: "Good Vibrations", genre: "Pop, Rock" },
+      { artist: "Bill Withers", song: "Lovely Day", genre: "Soul" },
+    ],
+    books: [
+      {
+        title: "The House in the Cerulean Sea",
+        author: "T.J. Klune",
+        genre: "Fantasy",
+      },
+      {
+        title: "A Psalm for the Wild-Built",
+        author: "Becky Chambers",
+        genre: "Science Fiction",
+      },
+      {
+        title: "The Rosie Project",
+        author: "Graeme Simsion",
+        genre: "Romance",
+      },
+      {
+        title: "Anne of Green Gables",
+        author: "L.M. Montgomery",
+        genre: "Classic",
+      },
+      {
+        title: "Eleanor Oliphant Is Completely Fine",
+        author: "Gail Honeyman",
+        genre: "Contemporary Fiction",
+      },
+    ],
+    jokes: [
+      "Why don't scientists trust atoms? Because they make up everything!",
+      "What do you call a lazy kangaroo? Pouch potato.",
+      "What do you call a fish with no eyes? Fsh.",
+      "Why did the scarecrow win an award? Because he was outstanding in his field!",
+      "Parallel lines have so much in common. It’s a shame they’ll never meet.",
+    ],
+    helplines: ["Bharat-helpline.com"],
+    major_recommendations:
+      "Don't feel alone we are there for your help, just sit with calm mind.",
+  };
   // Function to capture a selfie
   const captureSelfie = () => {
     if (webcamRef.current) {
@@ -293,101 +323,126 @@ const App: React.FC = () => {
   // Function to get recommendations
   const handleGetRecommendations = () => {
     if (image) {
+        setShowRecommendations(true);
       console.log("Get recommendations for the image:", image);
       alert("Recommendations generated successfully!");
     }
   };
 
   return (
-//     <div className="main-container text-center">
-//       <h1 className="main-title mb-4">EmotionalEcho : Your Mood, Your World of Inspiration</h1>
+    <div className="main-container text-center">
+      <h1 className="main-title mb-4">EmotionalEcho : Your Mood, Your World of Inspiration</h1>
 
-//       <div className="upload-photo-container">
-//         {/* Image Preview */}
-//         {image ? (
-//           <img src={image} alt="Captured or Uploaded" className="photo-preview" />
-//         ) : (
-//           <div className="photo-placeholder mt-2 mb-3">
-//             <img src="/src/assets/placeholder-img.avif" className="placeholder-img" alt="" />
-//           </div>
-//         )}
-// <div className="d-flex flex-column flex-sm-row justify-content-center">
-//    {/* Upload Photo Button */}
-//         {!image && (
-//           <label className="upload-button button-29">
-//             Upload Photo
-//             <input
-//               type="file"
-//               accept="image/*"
-//               className="file-input"
-//               onChange={handleImageUpload}
-//             />
-//           </label>
-//         )}
+      <div className="upload-photo-container">
+        {/* Image Preview */}
+        {image ? (
+          <img src={image} alt="Captured or Uploaded" className="photo-preview" />
+        ) : (
+          <div className="photo-placeholder mt-2 mb-3">
+            <img src="/src/assets/placeholder-img.avif" className="placeholder-img" alt="" />
+          </div>
+        )}
+<div className="d-flex flex-column flex-sm-row justify-content-center">
+   {/* Upload Photo Button */}
+        {!image && (
+          <label className="upload-button button-29">
+            Upload Photo
+            <input
+              type="file"
+              accept="image/*"
+              className="file-input"
+              onChange={handleImageUpload}
+            />
+          </label>
+        )}
 
-//         {/* Take Selfie Button */}
-//         <button
-//           className="upload-button button-29"
-//           onClick={() => setShowWebcam(true)}
-//         >
-//           {image ? "Retake Selfie" : "Take Selfie"}
-//         </button>  
-//         {/* Get Recommendations Button */}
-//         {image && (
-//           <button
-//             className="upload-button button-29"
-//             onClick={handleGetRecommendations}
-//           >
-//             Get Recommendations
-//           </button>
+        {/* Take Selfie Button */}
+        <button
+          className="upload-button button-29"
+          onClick={() => setShowWebcam(true)}
+        >
+          {image ? "Retake Selfie" : "Take Selfie"}
+        </button>  
+        {/* Get Recommendations Button */}
+        {image && (
+          <button
+            className="upload-button button-29"
+            onClick={handleGetRecommendations}
+          >
+            Get Recommendations
+          </button>
         
           
-//         )}
-// </div>
+        )}
+</div>
        
 
       
-//       </div>
-//         <p className="text-center mt-3 recommendations-txt">Recommendations for you</p>
+      </div>
+    
+    {showRecommendations && (
+    <div>
+                <p className="text-center mt-3 recommendations-txt">Recommendations for you</p>
 
-//         <div className="row mt-2 mb-3 recommendations-txt-container" style={{margin: "auto", maxWidth: "600px"}}>
+        <div className="row mt-2 mb-3 recommendations-txt-container" style={{margin: "auto", maxWidth: "600px"}}>
+        <p className="m-auto">{response.major_recommendations}</p>
+        </div>
+        {/* <div className="row mt-2 mb-3" style={{margin: "auto", maxWidth: "800px"}}>
+        {categories.map((data, index) => (
+          <div key={index} className="col-md-4 mb-4 gap-3"> 
+            <CategoryCard category={data.category} items={data.items} />
+          </div>
+        ))}
+      </div> */}
+      <div className="row mt-2 mb-3" style={{ margin: "auto", maxWidth: "800px" }}>
+        {Object.keys(response).map((key, index) => {
+          if (key === "major_recommendations" || key === "helplines") return null;
+          const categoryName =
+            key.charAt(0).toUpperCase() + key.slice(1); // Capitalize category name
+          const items =
+            key === "movies"
+              ? response[key].map((movie: any) => `${movie.title} (${movie.genre})`)
+              : key === "music"
+              ? response[key].map(
+                  (track: any) =>
+                    `${track.artist} - ${track.song} (${track.genre})`
+                )
+              : key === "books"
+              ? response[key].map(
+                  (book: any) =>
+                    `${book.title} by ${book.author} (${book.genre})`
+                )
+              : response[key];
+          return (
+            <div key={index} className="col-md-4 mb-4 gap-3">
+              <CategoryCard category={categoryName} items={items} />
+            </div>
+          );
+        })}
+      </div>
+       </div>)}
+      {/* Webcam Component */}
+      {showWebcam && (
+        <div className="webcam-container">
+          <Webcam
+            ref={webcamRef}
+            audio={false}
+            screenshotFormat="image/jpeg"
+            className="webcam"
+          />
+          <button className="capture-button" onClick={captureSelfie}>
+            Capture Photo
+          </button>
+          <button className="close-button" onClick={() => setShowWebcam(false)}>
+            Close
+          </button>
+        </div>
+      )}
+      <div className="text-center   text-white">Made with ❤️ at KH.</div>
 
-//         </div>
-//         <div className="row mt-2 mb-3" style={{margin: "auto", maxWidth: "800px"}}>
-//         {categories.map((data, index) => (
-//           <div key={index} className="col-md-4 mb-4 gap-3"> 
-//             <CategoryCard category={data.category} items={data.items} />
-//           </div>
-//         ))}
-//       </div>
-//       {/* Webcam Component */}
-//       {showWebcam && (
-//         <div className="webcam-container">
-//           <Webcam
-//             ref={webcamRef}
-//             audio={false}
-//             screenshotFormat="image/jpeg"
-//             className="webcam"
-//           />
-//           <button className="capture-button" onClick={captureSelfie}>
-//             Capture Photo
-//           </button>
-//           <button className="close-button" onClick={() => setShowWebcam(false)}>
-//             Close
-//           </button>
-//         </div>
-//       )}
-//       <p className="text-center mt-3  text-white">Made with ❤️ at KH.</p>
-
-//     </div>
-<>
-<Routes>
-      <Route path="/" element={<WelcomePage />} />
-      <Route path="/main" element={<Dashboard />} />
-    </Routes>
-</>
+    </div>
 
   );
 };
 
-export default App;
+export default Dashboard;
